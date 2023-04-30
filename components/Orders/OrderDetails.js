@@ -73,7 +73,7 @@ const OrderDetailsCard = ({ orderDetails }) => {
             onClick={refundOrderFn}
             className={`btn btn-primary btn-wide ${isLoading && "loading"}`}
           >
-            Refund Order
+            Cancel And Refund Order
           </button>
         </div>
       </div>
