@@ -86,7 +86,10 @@ const OrderDetails = () => {
           />
         </div>
         <div className="flex-1">
-          <ServiceViewer selectedServices={orderDetails.selectedServices} />
+          <ServiceViewer
+            selectedServices={orderDetails.selectedServices}
+            facilites={orderDetails.facilites}
+          />
         </div>
       </div>
       {/* <pre className="mt-96">{JSON.stringify(orderDetails, null, 4)}</pre>; */}

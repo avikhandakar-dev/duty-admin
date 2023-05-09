@@ -1,5 +1,5 @@
 import { refundOrder } from "@lib/api";
-import { formatStatus } from "@lib/utils";
+import { dutyFee, formatStatus } from "@lib/utils";
 import { useState } from "react";
 import { toast } from "react-hot-toast";
 
@@ -8,6 +8,15 @@ const OrderDetailsCard = ({ orderDetails }) => {
   const activeGig = orderDetails.gigId
     ? orderDetails.service.gigs.find((gig) => gig.id === orderDetails.gigId)
     : orderDetails.service.gigs.find((gig) => gig.type === orderDetails.type);
+
+  const customerPaid =
+    orderDetails.amount +
+    Number(dutyFee(orderDetails.dutyFee, orderDetails.amount));
+  const vendorGet =
+    orderDetails.amount -
+    Number(dutyFee(orderDetails.dutyFee, orderDetails.amount));
+  const dutyProfit = customerPaid - vendorGet;
+
   const refundOrderFn = async () => {
     const answer = prompt("Please enter 'Refund Order'");
     if (answer !== "Refund Order") return toast.error("Incorrect!");
@@ -41,8 +50,24 @@ const OrderDetailsCard = ({ orderDetails }) => {
         <div className="flex justify-between border-b pb-1 border-slate-800">
           <span className="font-semibold">Amount</span>
           <span className=" opacity-50">
-            {orderDetails.offerPrice || orderDetails.amount}
+            {orderDetails.offerPrice || orderDetails.amount}৳
           </span>
+        </div>
+        <div className="flex justify-between border-b pb-1 border-slate-800">
+          <span className="font-semibold">Duty Fee</span>
+          <span className=" opacity-50">{orderDetails.dutyFee * 100}%</span>
+        </div>
+        <div className="flex justify-between border-b pb-1 border-slate-800">
+          <span className="font-semibold">Customer Total Pay</span>
+          <span className=" opacity-50">{customerPaid}৳</span>
+        </div>
+        <div className="flex justify-between border-b pb-1 border-slate-800">
+          <span className="font-semibold">Vendor Will Get</span>
+          <span className=" opacity-50">{vendorGet}৳</span>
+        </div>
+        <div className="flex justify-between border-b pb-1 border-slate-800">
+          <span className="font-semibold">Duty Profit</span>
+          <span className=" opacity-50">{dutyProfit}৳</span>
         </div>
         <div className="flex justify-between border-b pb-1 border-slate-800">
           <span className="font-semibold">Status</span>
