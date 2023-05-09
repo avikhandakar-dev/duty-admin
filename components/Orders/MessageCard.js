@@ -38,10 +38,10 @@ const MessageCard = ({ right = false, user, message }) => {
           ) : (
             <div className="avatar placeholder">
               <div className="mask mask-squircle w-12 h-12 bg-neutral-focus text-neutral-content">
-                <span className="text-xl uppercase">{`${user.firstName.slice(
+                <span className="text-xl uppercase">{`${user.name.slice(
                   0,
                   1
-                )}${user.lastName.slice(0, 1)}`}</span>
+                )}`}</span>
               </div>
             </div>
           )}

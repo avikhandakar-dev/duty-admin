@@ -47,15 +47,15 @@ const UserInfo = ({ user, title }) => {
           ) : (
             <div className="avatar placeholder">
               <div className="mask mask-hexagon w-16 h-16 bg-neutral-focus text-neutral-content">
-                <span className="text-xl uppercase">{`${user.firstName.slice(
+                <span className="text-xl uppercase">{`${user.name.slice(
                   0,
                   1
-                )}${user.lastName.slice(0, 1)}`}</span>
+                )}`}</span>
               </div>
             </div>
           )}
           <div>
-            <p className="font-semibold">{`${user.firstName} ${user.lastName}`}</p>
+            <p className="font-semibold">{`${user.name}`}</p>
             <p className="opacity-50">{user.email}</p>
           </div>
         </div>

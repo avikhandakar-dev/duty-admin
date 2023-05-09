@@ -129,10 +129,7 @@ const CancelledWithdrawTable = () => {
                         ) : (
                           <div className="avatar placeholder">
                             <div className="mask mask-squircle w-12 h-12 bg-neutral-focus text-neutral-content">
-                              <span className="text-xl uppercase">{`${withdraw.service.user.firstName.slice(
-                                0,
-                                1
-                              )}${withdraw.service.user.lastName.slice(
+                              <span className="text-xl uppercase">{`${withdraw.service.user.name.slice(
                                 0,
                                 1
                               )}`}</span>
@@ -141,7 +138,7 @@ const CancelledWithdrawTable = () => {
                         )}
 
                         <div>
-                          <div className="font-bold line-clamp-1">{`${withdraw.service.user.firstName} ${withdraw.service.user.lastName}`}</div>
+                          <div className="font-bold line-clamp-1">{`${withdraw.service.user.name}`}</div>
                           <div className="text-sm opacity-50">
                             {withdraw.service.user.email}
                           </div>

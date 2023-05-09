@@ -114,18 +114,18 @@ const ContactPage = () => {
                         ) : (
                           <div className="avatar placeholder">
                             <div className="mask mask-squircle w-12 h-12 bg-neutral-focus text-neutral-content">
-                              <span className="text-xl uppercase">{`${support.user.firstName.slice(
+                              <span className="text-xl uppercase">{`${support.user.name.slice(
                                 0,
                                 1
-                              )}${support.user.lastName.slice(0, 1)}`}</span>
+                              )}`}</span>
                             </div>
                           </div>
                         )}
 
                         <div>
-                          <div className="font-bold line-clamp-1">{`${support.user.firstName} ${support.user.lastName}`}</div>
+                          <div className="font-bold line-clamp-1">{`${support.user.name}`}</div>
                           <div className="text-sm opacity-50">
-                            {support.user.email}
+                            {support.user.phone}
                           </div>
                         </div>
                       </div>

@@ -285,18 +285,18 @@ export default function Home() {
                         ) : (
                           <div className="avatar placeholder">
                             <div className="mask mask-squircle w-12 h-12 bg-neutral-focus text-neutral-content">
-                              <span className="text-xl uppercase">{`${order.user.firstName.slice(
+                              <span className="text-xl uppercase">{`${order.user.name.slice(
                                 0,
                                 1
-                              )}${order.user.lastName.slice(0, 1)}`}</span>
+                              )}`}</span>
                             </div>
                           </div>
                         )}
 
                         <div>
-                          <div className="font-bold">{`${order.user.firstName} ${order.user.lastName}`}</div>
+                          <div className="font-bold">{`${order.user.name}`}</div>
                           <div className="text-sm opacity-50">
-                            {order.user.email}
+                            {order.user.phone}
                           </div>
                         </div>
                       </div>

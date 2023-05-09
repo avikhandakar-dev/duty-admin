@@ -41,7 +41,7 @@ export const adminSidebarTabs = [
   {
     icon: <IoMdSettings />,
     title: "Settings",
-    href: "/admin/others",
+    href: "/settings",
   },
 ];
 const AdminLayout = ({ children, title, cta }) => {

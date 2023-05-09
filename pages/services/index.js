@@ -202,10 +202,7 @@ const ServicesPage = () => {
                         ) : (
                           <div className="avatar placeholder">
                             <div className="mask mask-squircle w-12 h-12 bg-neutral-focus text-neutral-content">
-                              <span className="text-xl uppercase">{`${gig.service.user.firstName.slice(
-                                0,
-                                1
-                              )}${gig.service.user.lastName.slice(
+                              <span className="text-xl uppercase">{`${gig.service.user.name.slice(
                                 0,
                                 1
                               )}`}</span>
@@ -214,9 +211,9 @@ const ServicesPage = () => {
                         )}
 
                         <div>
-                          <div className="font-bold line-clamp-1">{`${gig.service.user.firstName} ${gig.service.user.lastName}`}</div>
+                          <div className="font-bold line-clamp-1">{`${gig.service.user.name}`}</div>
                           <div className="text-sm opacity-50">
-                            {gig.service.user.email}
+                            {gig.service.user.phone}
                           </div>
                         </div>
                       </div>
@@ -226,36 +223,52 @@ const ServicesPage = () => {
                     <td>{gig.price}</td>
                     <td>{moment(gig?.createdAt).format("Do MMMM, h:mm A")}</td>
                     <td>
-                      <input
-                        onChange={() => togglePopularFn(gig.id)}
-                        type="checkbox"
-                        className="toggle toggle-primary"
-                        checked={gig.popular}
-                      />
+                      {gig.type === "STARTING" ? (
+                        <input
+                          onChange={() => togglePopularFn(gig.id)}
+                          type="checkbox"
+                          className="toggle toggle-primary"
+                          checked={gig.popular}
+                        />
+                      ) : (
+                        "-"
+                      )}
                     </td>
                     <td>
-                      <input
-                        onChange={() => toggleTopFn(gig.id)}
-                        type="checkbox"
-                        className="toggle toggle-primary"
-                        checked={gig.top}
-                      />
+                      {gig.type === "STARTING" ? (
+                        <input
+                          onChange={() => toggleTopFn(gig.id)}
+                          type="checkbox"
+                          className="toggle toggle-primary"
+                          checked={gig.top}
+                        />
+                      ) : (
+                        "-"
+                      )}
                     </td>
                     <td>
-                      <input
-                        onChange={() => toggleTrendingFn(gig.id)}
-                        type="checkbox"
-                        className="toggle toggle-primary"
-                        checked={gig.trending}
-                      />
+                      {gig.type === "STARTING" ? (
+                        <input
+                          onChange={() => toggleTrendingFn(gig.id)}
+                          type="checkbox"
+                          className="toggle toggle-primary"
+                          checked={gig.trending}
+                        />
+                      ) : (
+                        "-"
+                      )}
                     </td>
                     <td>
-                      <input
-                        onChange={() => toggleSuggestFn(gig.id)}
-                        type="checkbox"
-                        className="toggle toggle-primary"
-                        checked={gig.suggest}
-                      />
+                      {gig.type === "STARTING" ? (
+                        <input
+                          onChange={() => toggleSuggestFn(gig.id)}
+                          type="checkbox"
+                          className="toggle toggle-primary"
+                          checked={gig.suggest}
+                        />
+                      ) : (
+                        "-"
+                      )}
                     </td>
                   </tr>
                 ))}
