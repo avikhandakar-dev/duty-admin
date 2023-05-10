@@ -1,6 +1,7 @@
 import LoadingScreen from "@components/LoadingScreen";
 import UserInfo from "@components/Orders/UserInfo";
 import SupportDetails from "@components/Support/SupportDetails";
+import UserInfoSupport from "@components/Support/UserInfoSupport";
 import { getSupportById } from "@lib/api";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
@@ -39,7 +40,11 @@ const SupportDetailsPage = () => {
           <SupportDetails support={supportDetails} />
         </div>
         <div className="w-96 flex-shrink-0">
-          <UserInfo user={supportDetails.user} title="User" />
+          <UserInfoSupport
+            user={supportDetails.user}
+            title="User"
+            supportId={supportDetails.id}
+          />
         </div>
       </div>
     </div>
