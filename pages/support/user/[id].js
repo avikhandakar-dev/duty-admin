@@ -1,5 +1,6 @@
 import LoadingScreen from "@components/LoadingScreen";
-import { getAllUsersWithSupport } from "@lib/api";
+import { getSupportsByUserId } from "@lib/api";
+import { useRouter } from "next/router";
 import debounce from "lodash.debounce";
 import moment from "moment";
 import Link from "next/link";
@@ -7,14 +8,30 @@ import { useEffect, useMemo, useState } from "react";
 import { BsChevronDoubleLeft, BsChevronDoubleRight } from "react-icons/bs";
 import ReactPaginate from "react-paginate";
 
-const ContactPage = () => {
-  const [users, setUsers] = useState([]);
+const SupportDetailsPage = () => {
+  const router = useRouter();
+  const { id } = router.query;
+  const [isLoading, setIsLoading] = useState(true);
+  const [supports, setSupports] = useState(null);
   const [limit, setLimit] = useState(20);
   const [skip, setSkip] = useState(0);
   const [total, setTotal] = useState(0);
-  const [isLoading, setIsLoading] = useState(true);
   const [isFiltering, setIsFiltering] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
+
+  const fetchData = async () => {
+    if (!id) return;
+    try {
+      const { data } = await getSupportsByUserId(id, limit, skip, searchTerm);
+      setSupports(data.supports);
+      setTotal(data.total);
+    } catch (error) {
+      setSupports([]);
+      console.log(error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   const handleChange = (e) => {
     setSearchTerm(e.target.value);
@@ -24,21 +41,6 @@ const ContactPage = () => {
     return debounce(handleChange, 1000);
   }, []);
 
-  const fetchData = async () => {
-    try {
-      setIsFiltering(true);
-      const { data } = await getAllUsersWithSupport(limit, skip, searchTerm);
-      setUsers(data.users);
-      setTotal(data.total);
-    } catch (error) {
-      setUsers([]);
-      console.log(error);
-    } finally {
-      setIsLoading(false);
-      setIsFiltering(false);
-    }
-  };
-
   const handlePageClick = (event) => {
     const newOffset = (event.selected * limit) % total;
     setSkip(newOffset);
@@ -46,7 +48,7 @@ const ContactPage = () => {
 
   useEffect(() => {
     fetchData();
-  }, [skip, searchTerm]);
+  }, [id, skip, searchTerm]);
 
   return (
     <>
@@ -86,30 +88,36 @@ const ContactPage = () => {
           {isFiltering && (
             <span className="absolute inset-0 w-full h-full bg-base-200 bg-opacity-0 z-[15] backdrop-blur-sm" />
           )}
-          {users.length > 0 ? (
+          {supports.length > 0 ? (
             <table className="table w-full">
               <thead>
                 <tr>
                   <th>User</th>
-                  <th>Support Count</th>
+                  <th>Ticket</th>
+                  <th>Replied</th>
+                  <th>Subject</th>
+                  <th>Date</th>
                   <th></th>
                 </tr>
               </thead>
               <tbody>
-                {users.map((user) => (
+                {supports.map((support) => (
                   <tr>
                     <td>
                       <div className="flex items-center space-x-3 max-w-xs overflow-x-hidden">
-                        {user.profilePhoto ? (
+                        {support.user.profilePhoto ? (
                           <div className="avatar">
                             <div className="mask mask-squircle w-12 h-12">
-                              <img src={user.profilePhoto} alt="Avatar" />
+                              <img
+                                src={support.user.profilePhoto}
+                                alt="Avatar"
+                              />
                             </div>
                           </div>
                         ) : (
                           <div className="avatar placeholder">
                             <div className="mask mask-squircle w-12 h-12 bg-neutral-focus text-neutral-content">
-                              <span className="text-xl uppercase">{`${user.name.slice(
+                              <span className="text-xl uppercase">{`${support.user.name.slice(
                                 0,
                                 1
                               )}`}</span>
@@ -118,14 +126,27 @@ const ContactPage = () => {
                         )}
 
                         <div>
-                          <div className="font-bold line-clamp-1">{`${user.name}`}</div>
-                          <div className="text-sm opacity-50">{user.phone}</div>
+                          <div className="font-bold line-clamp-1">{`${support.user.name}`}</div>
+                          <div className="text-sm opacity-50">
+                            {support.user.phone}
+                          </div>
                         </div>
                       </div>
                     </td>
-                    <td>{user._count.supports}</td>
+                    <td>{support.ticketNumber}</td>
                     <td>
-                      <Link href={`/support/user/${user.id}`}>
+                      <input
+                        type="checkbox"
+                        className="toggle toggle-primary pointer-events-none"
+                        defaultChecked={support.isReplied}
+                      />
+                    </td>
+                    <td>{support.subject}</td>
+                    <td>
+                      {moment(support?.createdAt).format("Do MMMM, h:mm A")}
+                    </td>
+                    <td>
+                      <Link href={`/support/${support.id}`}>
                         <a className="btn btn-ghost btn-xs">details</a>
                       </Link>
                     </td>
@@ -135,13 +156,16 @@ const ContactPage = () => {
               <tfoot>
                 <tr>
                   <th>User</th>
-                  <th>Support Count</th>
+                  <th>Ticket</th>
+                  <th>Replied</th>
+                  <th>Subject</th>
+                  <th>Date</th>
                   <th></th>
                 </tr>
               </tfoot>
             </table>
           ) : (
-            <div className="text-center py-8">No users found</div>
+            <div className="text-center py-8">No supports found</div>
           )}
         </div>
       )}
@@ -170,5 +194,4 @@ const ContactPage = () => {
   );
 };
 
-ContactPage.title = "Supports";
-export default ContactPage;
+export default SupportDetailsPage;
