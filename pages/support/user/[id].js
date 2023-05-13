@@ -109,7 +109,11 @@ const SupportDetailsPage = () => {
                           <div className="avatar">
                             <div className="mask mask-squircle w-12 h-12">
                               <img
-                                src={support.user.profilePhoto}
+                                src={
+                                  support.serviceId
+                                    ? "/shield.svg"
+                                    : support.user.profilePhoto
+                                }
                                 alt="Avatar"
                               />
                             </div>
