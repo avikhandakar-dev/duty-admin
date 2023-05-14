@@ -130,7 +130,10 @@ const SupportDetailsPage = () => {
                         )}
 
                         <div>
-                          <div className="font-bold line-clamp-1">{`${support.user.name}`}</div>
+                          <div className="font-bold line-clamp-1">{`${
+                            support.service?.serviceCenterName ||
+                            support.user.name
+                          }`}</div>
                           <div className="text-sm opacity-50">
                             {support.user.phone}
                           </div>

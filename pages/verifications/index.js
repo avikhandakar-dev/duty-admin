@@ -91,7 +91,7 @@ const VerificationsPage = () => {
             <table className="table w-full">
               <thead>
                 <tr>
-                  <th>User</th>
+                  <th>Service</th>
                   <th>Accepted</th>
                   <th>Rejected</th>
                   <th>Submited</th>
@@ -124,7 +124,7 @@ const VerificationsPage = () => {
                         )}
 
                         <div>
-                          <div className="font-bold line-clamp-1">{`${verification.service.user.name}`}</div>
+                          <div className="font-bold line-clamp-1">{`${verification.service.serviceCenterName}`}</div>
                           <div className="text-sm opacity-50">
                             {verification.service.user.phone}
                           </div>
