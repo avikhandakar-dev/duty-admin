@@ -68,7 +68,7 @@ const VerificationDetailsPage = () => {
         </div>
         <div className="flex-1">
           <RejectVerificationCard
-            onSuccess={() => setDoRefresh(!doRefresh)}
+            onSuccess={() => router.replace("/verifications")}
             verificationDetails={verificationDetails}
           />
         </div>
