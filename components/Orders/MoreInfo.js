@@ -67,7 +67,15 @@ const MoreInfo = ({ orderDetails }) => {
           <div className="flex justify-between border-b pb-1 border-slate-800">
             <span className="font-semibold">Attachment</span>
             {orderDetails.attachment ? (
-              <span className="badge badge-primary">Download</span>
+              <a
+                className="badge badge-primary cursor-pointer"
+                href={orderDetails.attachment}
+                target="_blank"
+                download
+                rel="noreferrer"
+              >
+                Download
+              </a>
             ) : (
               <span className=" opacity-50">N/A</span>
             )}
@@ -84,7 +92,15 @@ const MoreInfo = ({ orderDetails }) => {
           <div className="flex justify-between border-b pb-1 border-slate-800">
             <span className="font-semibold">Proof</span>
             {orderDetails.proofImage ? (
-              <span className="badge badge-primary">Download</span>
+              <a
+                className="badge badge-primary cursor-pointer"
+                href={orderDetails.proofImage}
+                target="_blank"
+                download
+                rel="noreferrer"
+              >
+                Download
+              </a>
             ) : (
               <span className=" opacity-50">N/A</span>
             )}
