@@ -4,6 +4,7 @@ import {
   BiArrowBack,
   BiCategory,
   BiFoodMenu,
+  BiMailSend,
   BiMessageDetail,
 } from "react-icons/bi";
 import Link from "next/link";
@@ -37,6 +38,7 @@ export const adminSidebarTabs = [
   { icon: <MdDesignServices />, title: "Services", href: "/services" },
   { icon: <IoIosImages />, title: "Verifications", href: "/verifications" },
   { icon: <MdSupportAgent />, title: "Support", href: "/support" },
+  { icon: <BiMailSend />, title: "Contact", href: "/contact" },
   { icon: <MdOutlineReportProblem />, title: "Report", href: "/report" },
   {
     icon: <IoMdSettings />,

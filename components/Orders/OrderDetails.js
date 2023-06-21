@@ -36,7 +36,10 @@ const OrderDetailsCard = ({ orderDetails }) => {
   return (
     <div className="card w-full bg-base-200 shadow-xl h-full border border-primary rounded">
       <figure className="w-full h-48">
-        <img className="object-cover w-full h-full" src={activeGig.images[0]} />
+        <img
+          className="object-cover w-full h-full"
+          src={activeGig?.images[0]}
+        />
       </figure>
       <div className="card-body">
         <div className="flex justify-between border-b pb-1 border-slate-800">

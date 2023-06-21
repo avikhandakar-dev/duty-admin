@@ -17,7 +17,7 @@ const MessageCard = ({ right = false, user, message }) => {
               data-src={message.image}
               data-thumb={message.image}
             >
-              <Image
+              <img
                 src={message.image}
                 objectFit="cover"
                 objectPosition="center"

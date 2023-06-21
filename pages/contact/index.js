@@ -1,14 +1,13 @@
 import LoadingScreen from "@components/LoadingScreen";
-import { getAllCustomers } from "@lib/api";
+import { getAllContactMessages } from "@lib/api";
 import debounce from "lodash.debounce";
-import moment from "moment";
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import { BsChevronDoubleLeft, BsChevronDoubleRight } from "react-icons/bs";
 import ReactPaginate from "react-paginate";
 
-const CustomersPage = () => {
-  const [users, setUsers] = useState([]);
+const ContactPage = () => {
+  const [contacts, setContacts] = useState([]);
   const [limit, setLimit] = useState(20);
   const [skip, setSkip] = useState(0);
   const [total, setTotal] = useState(0);
@@ -27,11 +26,11 @@ const CustomersPage = () => {
   const fetchData = async () => {
     try {
       setIsFiltering(true);
-      const { data } = await getAllCustomers(limit, skip, searchTerm);
-      setUsers(data.users);
+      const { data } = await getAllContactMessages(limit, skip, searchTerm);
+      setContacts(data.contacts);
       setTotal(data.total);
     } catch (error) {
-      setUsers([]);
+      setContacts([]);
       console.log(error);
     } finally {
       setIsLoading(false);
@@ -51,7 +50,7 @@ const CustomersPage = () => {
   return (
     <>
       <div className="flex justify-between items-start mb-4 gap-4 flex-col md:flex-row">
-        <div>Total : {total}</div>
+        <div></div>
         <div className="form-control">
           <div className="input-group">
             <input
@@ -86,35 +85,31 @@ const CustomersPage = () => {
           {isFiltering && (
             <span className="absolute inset-0 w-full h-full bg-base-200 bg-opacity-0 z-[15] backdrop-blur-sm" />
           )}
-          {users.length > 0 ? (
+          {contacts.length > 0 ? (
             <table className="table w-full">
               <thead>
                 <tr>
-                  <th>User</th>
+                  <th>Name</th>
+                  <th>Email</th>
                   <th>Phone</th>
-                  <th>Username</th>
-                  <th>Age</th>
-                  <th>Gender</th>
-                  <th>Verified</th>
-                  <th>Joined</th>
                   <th></th>
                 </tr>
               </thead>
               <tbody>
-                {users.map((user) => (
+                {contacts.map((contact) => (
                   <tr>
                     <td>
                       <div className="flex items-center space-x-3 max-w-xs overflow-x-hidden">
-                        {user.profilePhoto ? (
+                        {contact.profilePhoto ? (
                           <div className="avatar">
                             <div className="mask mask-squircle w-12 h-12">
-                              <img src={user.profilePhoto} alt="Avatar" />
+                              <img src={contact.profilePhoto} alt="Avatar" />
                             </div>
                           </div>
                         ) : (
                           <div className="avatar placeholder">
                             <div className="mask mask-squircle w-12 h-12 bg-neutral-focus text-neutral-content">
-                              <span className="text-xl uppercase">{`${user.name.slice(
+                              <span className="text-xl uppercase">{`${contact.name.slice(
                                 0,
                                 1
                               )}`}</span>
@@ -123,25 +118,14 @@ const CustomersPage = () => {
                         )}
 
                         <div>
-                          <div className="font-bold line-clamp-1">{`${user.name}`}</div>
-                          <div className="text-sm opacity-50">{user.phone}</div>
+                          <div className="font-bold line-clamp-1">{`${contact.name}`}</div>
                         </div>
                       </div>
                     </td>
-                    <td>{user.phone || "N/A"}</td>
-                    <td>{user.username}</td>
-                    <td>{user.age}</td>
-                    <td>{user.gender}</td>
+                    <td>{contact.email || "-"}</td>
+                    <td>{contact.phone || "-"}</td>
                     <td>
-                      <input
-                        type="checkbox"
-                        className="toggle toggle-primary pointer-events-none"
-                        defaultChecked={user.verified}
-                      />
-                    </td>
-                    <td>{moment(user?.createdAt).format("Do MMMM, h:mm A")}</td>
-                    <td>
-                      <Link href={`/customers/${user.id}`}>
+                      <Link href={`/contact/${contact.id}`}>
                         <a className="btn btn-ghost btn-xs">details</a>
                       </Link>
                     </td>
@@ -150,19 +134,15 @@ const CustomersPage = () => {
               </tbody>
               <tfoot>
                 <tr>
-                  <th>User</th>
+                  <th>Name</th>
+                  <th>Email</th>
                   <th>Phone</th>
-                  <th>Username</th>
-                  <th>Age</th>
-                  <th>Gender</th>
-                  <th>Verified</th>
-                  <th>Joined</th>
                   <th></th>
                 </tr>
               </tfoot>
             </table>
           ) : (
-            <div className="text-center py-8">No user found</div>
+            <div className="text-center py-8">No contacts found</div>
           )}
         </div>
       )}
@@ -191,5 +171,5 @@ const CustomersPage = () => {
   );
 };
 
-CustomersPage.title = "Vendors";
-export default CustomersPage;
+ContactPage.title = "Contacts";
+export default ContactPage;

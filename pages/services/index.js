@@ -134,7 +134,7 @@ const ServicesPage = () => {
   return (
     <>
       <div className="flex justify-between items-start mb-4 gap-4 flex-col md:flex-row">
-        <div></div>
+        <div>Total : {total}</div>
         <div className="form-control">
           <div className="input-group">
             <input
@@ -219,7 +219,7 @@ const ServicesPage = () => {
                       </div>
                     </td>
                     <td>{gig.type}</td>
-                    <td>{gig.title}</td>
+                    <td className="max-w-xs whitespace-normal">{gig.title}</td>
                     <td>{gig.price}</td>
                     <td>{moment(gig?.createdAt).format("Do MMMM, h:mm A")}</td>
                     <td>
