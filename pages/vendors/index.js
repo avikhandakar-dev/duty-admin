@@ -102,9 +102,10 @@ const VendorsPage = () => {
                 </tr>
               </thead>
               <tbody>
-                {users.map((user) => (
+                {users.map((user, index) => (
                   <tr>
-                    <td>
+                    <td className="flex items-center gap-4">
+                      <div className="font-bold">{index + 1 + skip}</div>
                       <div className="flex items-center space-x-3 max-w-xs overflow-x-hidden">
                         {user.profilePhoto ? (
                           <div className="avatar">

@@ -8,6 +8,7 @@ import {
 } from "@lib/api";
 import debounce from "lodash.debounce";
 import moment from "moment";
+import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import { toast } from "react-hot-toast";
 import {
@@ -189,34 +190,36 @@ const ServicesPage = () => {
                 {gigs.map((gig) => (
                   <tr>
                     <td>
-                      <div className="flex items-center space-x-3 max-w-xs overflow-x-hidden">
-                        {gig.service.user.profilePhoto ? (
-                          <div className="avatar">
-                            <div className="mask mask-squircle w-12 h-12">
-                              <img
-                                src={gig.service.user.profilePhoto}
-                                alt="Avatar"
-                              />
+                      <Link href={`/vendors/${gig.service.user.id}`}>
+                        <div className="flex cursor-pointer items-center space-x-3 max-w-xs overflow-x-hidden">
+                          {gig.service.user.profilePhoto ? (
+                            <div className="avatar">
+                              <div className="mask mask-squircle w-12 h-12">
+                                <img
+                                  src={gig.service.user.profilePhoto}
+                                  alt="Avatar"
+                                />
+                              </div>
                             </div>
-                          </div>
-                        ) : (
-                          <div className="avatar placeholder">
-                            <div className="mask mask-squircle w-12 h-12 bg-neutral-focus text-neutral-content">
-                              <span className="text-xl uppercase">{`${gig.service.user.name.slice(
-                                0,
-                                1
-                              )}`}</span>
+                          ) : (
+                            <div className="avatar placeholder">
+                              <div className="mask mask-squircle w-12 h-12 bg-neutral-focus text-neutral-content">
+                                <span className="text-xl uppercase">{`${gig.service.user.name.slice(
+                                  0,
+                                  1
+                                )}`}</span>
+                              </div>
                             </div>
-                          </div>
-                        )}
+                          )}
 
-                        <div>
-                          <div className="font-bold line-clamp-1">{`${gig.service.user.name}`}</div>
-                          <div className="text-sm opacity-50">
-                            {gig.service.user.phone}
+                          <div>
+                            <div className="font-bold line-clamp-1">{`${gig.service.user.name}`}</div>
+                            <div className="text-sm opacity-50">
+                              {gig.service.user.phone}
+                            </div>
                           </div>
                         </div>
-                      </div>
+                      </Link>
                     </td>
                     <td>{gig.type}</td>
                     <td className="max-w-xs whitespace-normal">{gig.title}</td>
