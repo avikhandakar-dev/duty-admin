@@ -1,9 +1,10 @@
 import LoadingScreen from "@components/LoadingScreen";
 import { getAllVendors } from "@lib/api";
+import { SocketContext } from "@lib/socketContext";
 import debounce from "lodash.debounce";
 import moment from "moment";
 import Link from "next/link";
-import { useEffect, useMemo, useState } from "react";
+import { useContext, useEffect, useMemo, useState } from "react";
 import { toast } from "react-hot-toast";
 import { BsChevronDoubleLeft, BsChevronDoubleRight } from "react-icons/bs";
 import ReactPaginate from "react-paginate";
@@ -16,6 +17,7 @@ const VendorsPage = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [isFiltering, setIsFiltering] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
+  const { onlineUsers } = useContext(SocketContext);
 
   const handleChange = (e) => {
     setSearchTerm(e.target.value);
@@ -52,7 +54,9 @@ const VendorsPage = () => {
   return (
     <>
       <div className="flex justify-between items-start mb-4 gap-4 flex-col md:flex-row">
-        <div>Total : {total}</div>
+        <div>
+          Total : {total}, Online : {onlineUsers.length}
+        </div>
         <div className="form-control">
           <div className="input-group">
             <input
