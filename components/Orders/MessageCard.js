@@ -29,7 +29,7 @@ const MessageCard = ({ right = false, user, message }) => {
       )}
       {message.text && (
         <div className={`chat ${right ? "chat-end" : "chat-start"}`}>
-          {user.profilePhoto ? (
+          {user?.profilePhoto ? (
             <div className="avatar chat-image">
               <div className="mask mask-squircle w-12 h-12">
                 <img src={user.profilePhoto} alt="Avatar" />
@@ -38,7 +38,7 @@ const MessageCard = ({ right = false, user, message }) => {
           ) : (
             <div className="avatar placeholder">
               <div className="mask mask-squircle w-12 h-12 bg-neutral-focus text-neutral-content">
-                <span className="text-xl uppercase">{`${user.name.slice(
+                <span className="text-xl uppercase">{`${user?.name.slice(
                   0,
                   1
                 )}`}</span>
