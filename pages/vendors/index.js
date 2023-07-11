@@ -13,6 +13,7 @@ import Services from "@components/Vendors/Services";
 import SupportsVendor from "@components/Vendors/Supports";
 import ChatVendor from "@components/Vendors/ChatVendor";
 import ServiceOptionsMenu from "@components/Vendors/ServiceOptionsMenu";
+import Verification from "@components/Vendors/Verification";
 
 const VendorsPage = () => {
   const [users, setUsers] = useState([]);
@@ -64,7 +65,7 @@ const VendorsPage = () => {
     },
     {
       name: "Verification",
-      content: <></>,
+      content: <Verification />,
     },
   ];
 

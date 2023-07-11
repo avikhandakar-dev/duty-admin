@@ -25,7 +25,8 @@
     "react-paginate": "^8.1.4",
     "react-responsive-carousel": "^3.2.23",
     "socket.io-client": "^4.6.1",
-    "yup": "^0.32.11"
+    "yup": "^0.32.11",
+    "zustand": "^4.3.9"
   },
   "devDependencies": {
     "@tailwindcss/forms": "^0.4.0-alpha.2",
