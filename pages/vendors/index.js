@@ -14,6 +14,7 @@ import SupportsVendor from "@components/Vendors/Supports";
 import ChatVendor from "@components/Vendors/ChatVendor";
 import ServiceOptionsMenu from "@components/Vendors/ServiceOptionsMenu";
 import Verification from "@components/Vendors/Verification";
+import OrdersVendor from "@components/Vendors/Orders";
 
 const VendorsPage = () => {
   const [users, setUsers] = useState([]);
@@ -45,7 +46,7 @@ const VendorsPage = () => {
     },
     {
       name: "Orders",
-      content: <></>,
+      content: <OrdersVendor />,
     },
     {
       name: "Withdraw",

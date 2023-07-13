@@ -133,6 +133,15 @@ const AdminLayout = ({ children, title, cta }) => {
                   <HiMenuAlt2 />
                 </a>
               </span>
+              <span className="hidden sm:block cursor-pointer">
+                <a
+                  onClick={() => {
+                    baseStore.setShowSidebar(!baseStore.showSidebar);
+                  }}
+                >
+                  <HiMenuAlt2 />
+                </a>
+              </span>
               <h1 className="text-xl font-bold text-primary-900">
                 {title || "Admin"}
               </h1>
