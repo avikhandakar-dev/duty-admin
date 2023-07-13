@@ -5,12 +5,15 @@ import Image from "next/image";
 import { useState } from "react";
 import { toast } from "react-hot-toast";
 import { AiOutlineFileImage } from "react-icons/ai";
+import { CgFileDocument } from "react-icons/cg";
 import { FiFileText } from "react-icons/fi";
 import { GoMailRead } from "react-icons/go";
+import OrderAgreementView from "./OrderAgreementView";
 
 const OrderDetailsFixed = ({ order }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [showReviewScreen, setShowReviewScreen] = useState(false);
+  const [showAgreementView, setShowAgreementView] = useState(false);
 
   const refundOrderFn = async () => {
     const answer = prompt("Please enter 'Refund Order'");
@@ -90,6 +93,15 @@ const OrderDetailsFixed = ({ order }) => {
     // return <GiveReview orderId={order.id} />;
   }
 
+  if (showAgreementView) {
+    return (
+      <OrderAgreementView
+        agreement={order.agreement}
+        goBack={() => setShowAgreementView(false)}
+      />
+    );
+  }
+
   return (
     <>
       <div className="hidden md:block">
@@ -98,12 +110,12 @@ const OrderDetailsFixed = ({ order }) => {
           <p className="text-primary pb-2 text-2xl border-b border-primary w-max mx-auto mr-[30%]">
             Fixed Service
           </p>
-          <button
-            onClick={() => addToChatList(order.service.user.username)}
-            className="text-2xl text-primary"
-          >
-            <GoMailRead />
-          </button>
+          {order.status !== "WAITING_FOR_ACCEPT" && (
+            <CgFileDocument
+              className="text-2xl cursor-pointer text-primary"
+              onClick={() => setShowAgreementView(true)}
+            />
+          )}
         </div>
         <div className="">
           <div
@@ -162,21 +174,21 @@ const OrderDetailsFixed = ({ order }) => {
                   </p>
                 </div>
                 <div className="text-center text-sm border-b pb-6">
-                  <p className="text-[20px] mb-2">Price</p>
+                  <p className="text-[20px] mb-2 mt-6">Price</p>
                   <p className="">
-                    Your offer <span className="pl-4">{order.offerPrice}৳</span>
+                    Service price <span className="pl-4">{order.amount}৳</span>
                   </p>
                   <p className="">
                     Duty fee {order.dutyFee * 100}%{" "}
                     <span className="pl-4">
-                      +{dutyFee(order.dutyFee, order.offerPrice)}৳
+                      +{dutyFee(order.dutyFee, order.amount)}৳
                     </span>
                   </p>
                   <p className="text-[20px] font-medium mt-4">
                     Total Pay{" "}
                     <span className="pl-4">
-                      {order.offerPrice +
-                        Number(dutyFee(order.dutyFee, order.offerPrice))}
+                      {order.amount +
+                        Number(dutyFee(order.dutyFee, order.amount))}
                       ৳
                     </span>
                   </p>
@@ -214,20 +226,20 @@ const OrderDetailsFixed = ({ order }) => {
                     <div className="text-center text-sm border-b pb-6">
                       <p className="text-[20px] mb-2 mt-6">Price</p>
                       <p className="">
-                        Your offer{" "}
-                        <span className="pl-4">{order.offerPrice}৳</span>
+                        Service price{" "}
+                        <span className="pl-4">{order.amount}৳</span>
                       </p>
                       <p className="">
                         Duty fee {order.dutyFee * 100}%{" "}
                         <span className="pl-4">
-                          +{dutyFee(order.dutyFee, order.offerPrice)}৳
+                          +{dutyFee(order.dutyFee, order.amount)}৳
                         </span>
                       </p>
                       <p className="text-[20px] font-medium mt-4">
                         Total Pay{" "}
                         <span className="pl-4">
-                          {order.offerPrice +
-                            Number(dutyFee(order.dutyFee, order.offerPrice))}
+                          {order.amount +
+                            Number(dutyFee(order.dutyFee, order.amount))}
                           ৳
                         </span>
                       </p>

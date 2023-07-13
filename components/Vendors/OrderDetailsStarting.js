@@ -5,12 +5,15 @@ import Image from "next/image";
 import { useState } from "react";
 import { toast } from "react-hot-toast";
 import { AiOutlineFileImage } from "react-icons/ai";
+import { CgFileDocument } from "react-icons/cg";
 import { FiFileText } from "react-icons/fi";
 import { GoMailRead } from "react-icons/go";
+import OrderAgreementView from "./OrderAgreementView";
 
 const OrderDetailsStarting = ({ order }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [showReviewScreen, setShowReviewScreen] = useState(false);
+  const [showAgreementView, setShowAgreementView] = useState(false);
 
   const refundOrderFn = async () => {
     const answer = prompt("Please enter 'Refund Order'");
@@ -90,6 +93,15 @@ const OrderDetailsStarting = ({ order }) => {
     // return <GiveReview orderId={order.id} />;
   }
 
+  if (showAgreementView) {
+    return (
+      <OrderAgreementView
+        agreement={order.agreement}
+        goBack={() => setShowAgreementView(false)}
+      />
+    );
+  }
+
   return (
     <>
       <div className="hidden md:block">
@@ -98,12 +110,12 @@ const OrderDetailsStarting = ({ order }) => {
           <p className="text-primary pb-2 text-2xl border-b border-primary w-max mx-auto mr-[30%]">
             Bargaining Service
           </p>
-          <button
-            onClick={() => addToChatList(order.service.user.username)}
-            className="text-2xl text-primary"
-          >
-            <GoMailRead />
-          </button>
+          {order.status !== "WAITING_FOR_ACCEPT" && (
+            <CgFileDocument
+              className="text-2xl cursor-pointer text-primary"
+              onClick={() => setShowAgreementView(true)}
+            />
+          )}
         </div>
         <div className="">
           <div
