@@ -17,6 +17,37 @@ import Verification from "@components/Vendors/Verification";
 import OrdersVendor from "@components/Vendors/Orders";
 import WithdrawPage from "@components/Vendors/Withdraw";
 
+const Filters = [
+  {
+    name: "All",
+    value: "",
+  },
+  {
+    name: "T",
+    value: "Today",
+  },
+  {
+    name: "W",
+    value: "ThisWeek",
+  },
+  {
+    name: "M",
+    value: "ThisMonth",
+  },
+  {
+    name: "Y",
+    value: "ThisYear",
+  },
+  {
+    name: "U",
+    value: "Unverified",
+  },
+  {
+    name: "P",
+    value: "Pending",
+  },
+];
+
 const VendorsPage = () => {
   const [users, setUsers] = useState([]);
   const [limit, setLimit] = useState(20);
@@ -32,6 +63,7 @@ const VendorsPage = () => {
   const [dashboardData, setDashboardData] = useState(null);
   const router = useRouter();
   const { id } = router.query;
+  const [selectedFilter, setSelectedFilter] = useState("");
 
   function cn(...classes) {
     return classes.filter(Boolean).join(" ");
@@ -51,8 +83,7 @@ const VendorsPage = () => {
     },
     {
       name: "Withdraw",
-      // content: <WithdrawPage />,
-      content: <></>,
+      content: <WithdrawPage />,
     },
     {
       name: "Support",
@@ -83,7 +114,12 @@ const VendorsPage = () => {
   const fetchData = async () => {
     try {
       setIsFiltering(true);
-      const { data } = await getAllVendors(limit, skip, searchTerm);
+      const { data } = await getAllVendors(
+        limit,
+        skip,
+        searchTerm,
+        selectedFilter
+      );
       setUsers(data.users);
       setTotal(data.total);
     } catch (error) {
@@ -102,7 +138,7 @@ const VendorsPage = () => {
 
   useEffect(() => {
     fetchData();
-  }, [skip, searchTerm]);
+  }, [skip, searchTerm, selectedFilter]);
 
   useEffect(() => {
     if (users.length > 0) {
@@ -146,6 +182,20 @@ const VendorsPage = () => {
         <div className="w-72 flex-shrink-0 border-r border-gray-600 h-screen overflow-y-auto">
           <div className="flex justify-between items-start mb-4 gap-4 flex-col md:flex-row">
             <div className="form-control">
+              <div className="flex flex-wrap mb-2">
+                {Filters.map((filter, i) => (
+                  <label className="label cursor-pointer gap-1">
+                    <input
+                      className="radio radio-sm radio-primary"
+                      type="radio"
+                      value={filter.value}
+                      checked={selectedFilter === filter.value}
+                      onChange={() => setSelectedFilter(filter.value)}
+                    />
+                    <span className="label-text">{filter.name}</span>
+                  </label>
+                ))}
+              </div>
               <div className="input-group">
                 <input
                   type="text"
@@ -217,7 +267,7 @@ const VendorsPage = () => {
                         </div>
                       </div>
                       <div className="flex-shrink-0">
-                        <MdVerified />
+                        {user.verified && <MdVerified />}
                       </div>
                     </div>
                   ))}

@@ -7,8 +7,16 @@ import {
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { toast } from "react-hot-toast";
+import { AiOutlineCopy } from "react-icons/ai";
+import {
+  BsCheckLg,
+  BsChevronDoubleLeft,
+  BsChevronDoubleRight,
+} from "react-icons/bs";
+import moment from "moment";
+import { MdClose } from "react-icons/md";
 
-const WithdrawTable = ({ type }) => {
+const WithdrawTable = ({ status }) => {
   const [isLoading, setIsLoading] = useState(true);
   const router = useRouter();
   const { dashboard } = router.query;
@@ -22,7 +30,10 @@ const WithdrawTable = ({ type }) => {
     if (!dashboard) return;
     try {
       setIsLoading(true);
-      const { data } = await getAllWithdrawRequestByServiceId(dashboard, type);
+      const { data } = await getAllWithdrawRequestByServiceId(
+        dashboard,
+        status
+      );
       setWithdraws(data.withdraws);
       setTotal(data.total);
     } catch (error) {
@@ -90,7 +101,7 @@ const WithdrawTable = ({ type }) => {
 
   useEffect(() => {
     getData();
-  }, [dashboard, doRefresh]);
+  }, [dashboard, doRefresh, status]);
 
   if (isLoading) {
     return <LoadingScreen fullScreen={false} />;
@@ -100,7 +111,121 @@ const WithdrawTable = ({ type }) => {
     return <div>No data found</div>;
   }
 
-  return <div></div>;
+  return (
+    <div className="overflow-x-auto w-full">
+      <table className="table w-full">
+        <thead>
+          <tr>
+            <th>Amount</th>
+            <th>Bank Name</th>
+            <th>Branch Name</th>
+            <th>Account Number</th>
+            <th>Account Holder Name</th>
+            <th>Relation</th>
+            <th>Date</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          {withdraws.map((withdraw) => (
+            <tr>
+              <td>
+                <div className="flex gap-1 items-center cursor-pointer">
+                  {withdraw.amount}{" "}
+                  <AiOutlineCopy
+                    onClick={() => copyToClipboard(withdraw.amount)}
+                  />
+                </div>
+              </td>
+              <td>
+                <div className="flex gap-1 items-center cursor-pointer">
+                  {withdraw.service?.account?.bankDetails?.bankName}{" "}
+                  <AiOutlineCopy
+                    onClick={() =>
+                      copyToClipboard(
+                        withdraw.service?.account?.bankDetails?.bankName
+                      )
+                    }
+                  />
+                </div>
+              </td>
+              <td>
+                <div className="flex gap-1 items-center cursor-pointer">
+                  {withdraw.service?.account?.bankDetails?.branchName}{" "}
+                  <AiOutlineCopy
+                    onClick={() =>
+                      copyToClipboard(
+                        withdraw.service?.account?.bankDetails?.branchName
+                      )
+                    }
+                  />
+                </div>
+              </td>
+              <td>
+                <div className="flex gap-1 items-center cursor-pointer">
+                  {withdraw.service?.account?.bankDetails?.accountNumber}{" "}
+                  <AiOutlineCopy
+                    onClick={() =>
+                      copyToClipboard(
+                        withdraw.service?.account?.bankDetails?.accountNumber
+                      )
+                    }
+                  />
+                </div>
+              </td>
+              <td>
+                <div className="flex gap-1 items-center cursor-pointer">
+                  {withdraw.service?.account?.bankDetails?.accountHolderName}{" "}
+                  <AiOutlineCopy
+                    onClick={() =>
+                      copyToClipboard(
+                        withdraw.service?.account?.bankDetails
+                          ?.accountHolderName
+                      )
+                    }
+                  />
+                </div>
+              </td>
+              <td>{withdraw.service?.account?.bankDetails?.relation}</td>
+              <td>
+                {moment(withdraw?.createdAt).format("dddd Do MMMM, h:mm A")}
+              </td>
+              <td>
+                {withdraw.status === "PENDING" && (
+                  <div className="btn-group">
+                    <button
+                      onClick={() => handelComplete(withdraw.id)}
+                      className="btn btn-success"
+                    >
+                      <BsCheckLg />
+                    </button>
+                    <button
+                      onClick={() => handelCancel(withdraw.id)}
+                      className="btn btn-error"
+                    >
+                      <MdClose />
+                    </button>
+                  </div>
+                )}
+              </td>
+            </tr>
+          ))}
+        </tbody>
+        <tfoot>
+          <tr>
+            <th>Amount</th>
+            <th>Bank Name</th>
+            <th>Branch Name</th>
+            <th>Account Number</th>
+            <th>Account Holder Name</th>
+            <th>Relation</th>
+            <th>Date</th>
+            <th></th>
+          </tr>
+        </tfoot>
+      </table>
+    </div>
+  );
 };
 
 export default WithdrawTable;

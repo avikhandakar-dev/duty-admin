@@ -8,15 +8,15 @@ const WithdrawPage = () => {
   const Tabs = [
     {
       name: "Pending",
-      content: <WithdrawTable type="PENDING" />,
+      content: <WithdrawTable status="PENDING" />,
     },
     {
       name: "Completed",
-      content: <WithdrawTable type="COMPLETED" />,
+      content: <WithdrawTable status="COMPLETED" />,
     },
     {
       name: "Cancelled",
-      content: <WithdrawTable type="CANCELLED" />,
+      content: <WithdrawTable status="CANCELLED" />,
     },
   ];
   return (
