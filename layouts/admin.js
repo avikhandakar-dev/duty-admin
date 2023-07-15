@@ -16,6 +16,7 @@ import { BsBox } from "react-icons/bs";
 import { TbBusinessplan } from "react-icons/tb";
 import { TiBusinessCard } from "react-icons/ti";
 import {
+  MdChat,
   MdDesignServices,
   MdOutlineReportProblem,
   MdSupportAgent,
@@ -37,6 +38,7 @@ export const adminSidebarTabs = [
   { icon: <FaUsers />, title: "Customers", href: "/customers" },
   { icon: <TiBusinessCard />, title: "Vendors", href: "/vendors" },
   { icon: <MdDesignServices />, title: "Services", href: "/services" },
+  { icon: <MdChat />, title: "Chats", href: "/chats" },
   { icon: <IoIosImages />, title: "Verifications", href: "/verifications" },
   { icon: <MdSupportAgent />, title: "Support", href: "/support" },
   { icon: <BiMailSend />, title: "Contact", href: "/contact" },
