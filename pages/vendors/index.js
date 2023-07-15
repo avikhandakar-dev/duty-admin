@@ -1,5 +1,5 @@
 import LoadingScreen from "@components/LoadingScreen";
-import { getAllVendors } from "@lib/api";
+import { getAllVendors, getRatingForDashboard } from "@lib/api";
 import { SocketContext } from "@lib/socketContext";
 import debounce from "lodash.debounce";
 import { useRouter } from "next/router";
@@ -64,6 +64,7 @@ const VendorsPage = () => {
   const router = useRouter();
   const { id } = router.query;
   const [selectedFilter, setSelectedFilter] = useState("");
+  const [rating, setRating] = useState(0);
 
   function cn(...classes) {
     return classes.filter(Boolean).join(" ");
@@ -131,6 +132,14 @@ const VendorsPage = () => {
     }
   };
 
+  const getRating = async () => {
+    if (!selectedDashboard) return;
+    try {
+      const { data } = await getRatingForDashboard(selectedDashboard);
+      setRating(data.rating);
+    } catch (error) {}
+  };
+
   const handlePageClick = (event) => {
     const newOffset = (event.selected * limit) % total;
     setSkip(newOffset);
@@ -173,6 +182,7 @@ const VendorsPage = () => {
       setDashboardData(
         selectedVendor?.services.find((item) => item.id === selectedDashboard)
       );
+      getRating();
     }
   }, [selectedDashboard]);
 
@@ -317,6 +327,8 @@ const VendorsPage = () => {
                 ))}
               </select>
               <span>{dashboardData?.accepted ? "Approved" : "Pending"}</span>
+              <span>Total Views : {dashboardData?.views || 0}</span>
+              <span>Rating : {rating}</span>
               <ServiceOptionsMenu dashboard={dashboardData} />
             </div>
             <Tab.Group>
