@@ -8,7 +8,7 @@ import ReactPaginate from "react-paginate";
 import { BsChevronDoubleLeft, BsChevronDoubleRight } from "react-icons/bs";
 import OrderDetailsModal from "./OrderDetailsModal";
 
-const StartingOrderVendor = () => {
+const StartingOrderVendor = ({ status }) => {
   const [isLoading, setIsLoading] = useState(true);
   const [selectedOrder, setSelectedOrder] = useState(null);
   const router = useRouter();
@@ -23,7 +23,15 @@ const StartingOrderVendor = () => {
     if (!dashboard) return;
     try {
       setIsLoading(true);
-      const { data } = await getOrdersByServiceId(dashboard, "STARTING");
+      const { data } = await getOrdersByServiceId(
+        dashboard,
+        "STARTING",
+        limit,
+        skip,
+        "",
+        "",
+        status
+      );
       setOrders(data.orders);
       setTotal(data.total);
     } catch (error) {
@@ -40,7 +48,7 @@ const StartingOrderVendor = () => {
 
   useEffect(() => {
     getData();
-  }, [dashboard, doRefresh]);
+  }, [dashboard, doRefresh, status]);
 
   if (isLoading) {
     return <LoadingScreen fullScreen={false} />;

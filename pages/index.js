@@ -10,7 +10,7 @@ import debounce from "lodash.debounce";
 import Link from "next/link";
 import { useRouter } from "next/router";
 
-const OrderStatus = [
+export const OrderStatus = [
   {
     name: "Accepted",
     value: "ACCEPTED",
