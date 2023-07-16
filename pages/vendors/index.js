@@ -16,6 +16,7 @@ import ServiceOptionsMenu from "@components/Vendors/ServiceOptionsMenu";
 import Verification from "@components/Vendors/Verification";
 import OrdersVendor from "@components/Vendors/Orders";
 import WithdrawPage from "@components/Vendors/Withdraw";
+import NoteModal from "@components/Vendors/NoteModal";
 
 const Filters = [
   {
@@ -65,6 +66,7 @@ const VendorsPage = () => {
   const { id } = router.query;
   const [selectedFilter, setSelectedFilter] = useState("");
   const [rating, setRating] = useState(0);
+  const [isOpen, setIsOpen] = useState(false);
 
   function cn(...classes) {
     return classes.filter(Boolean).join(" ");
@@ -329,6 +331,12 @@ const VendorsPage = () => {
               <span>{dashboardData?.accepted ? "Approved" : "Pending"}</span>
               <span>Total Views : {dashboardData?.views || 0}</span>
               <span>Rating : {rating}</span>
+              <button
+                onClick={() => setIsOpen(true)}
+                className="btn btn-sm capitalize btn-primary rounded"
+              >
+                Note
+              </button>
               <ServiceOptionsMenu dashboard={dashboardData} />
             </div>
             <Tab.Group>
@@ -361,6 +369,14 @@ const VendorsPage = () => {
           </div>
         </div>
       </div>
+      {isOpen && (
+        <NoteModal
+          isOpen={isOpen}
+          closeModal={() => {
+            setIsOpen(false);
+          }}
+        />
+      )}
     </>
   );
 };
