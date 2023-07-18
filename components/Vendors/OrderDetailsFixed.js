@@ -125,7 +125,7 @@ const OrderDetailsFixed = ({ order }) => {
           >
             <div className="flex gap-4 items-center">
               <div className="items-center relative w-12 aspect-square overflow-hidden rounded-full">
-                <Image
+                <img
                   src={
                     order.service?.profilePhoto ||
                     "/Assets/images/service/user.svg"
