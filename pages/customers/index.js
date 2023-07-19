@@ -8,13 +8,10 @@ import { BsChevronDoubleLeft, BsChevronDoubleRight } from "react-icons/bs";
 import { MdVerified } from "react-icons/md";
 import ReactPaginate from "react-paginate";
 import { Tab } from "@headlessui/react";
-import ChatVendor from "@components/Vendors/ChatVendor";
-import ServiceOptionsMenu from "@components/Vendors/ServiceOptionsMenu";
-import OrdersVendor from "@components/Vendors/Orders";
-import NoteModal from "@components/Vendors/NoteModal";
 import OrdersCustomer from "@components/Customers/OrdersCustomer";
 import Supports from "@components/Customers/Supports";
 import ChatUser from "@components/Customers/Chat";
+import NoteModalUser from "@components/Customers/NoteModalUser";
 
 const Filters = [
   {
@@ -304,7 +301,7 @@ const CustomersPage = () => {
         </div>
       </div>
       {isOpen && (
-        <NoteModal
+        <NoteModalUser
           isOpen={isOpen}
           closeModal={() => {
             setIsOpen(false);
@@ -315,5 +312,5 @@ const CustomersPage = () => {
   );
 };
 
-CustomersPage.title = "Vendors";
+CustomersPage.title = "Customers";
 export default CustomersPage;
