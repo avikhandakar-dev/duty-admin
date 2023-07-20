@@ -24,6 +24,10 @@ const FixedServices = () => {
   const [limit, setLimit] = useState(20);
   const [skip, setSkip] = useState(0);
   const [total, setTotal] = useState(0);
+  const [today, setToday] = useState(0);
+  const [thisMonth, setThisMonth] = useState(0);
+  const [thisWeek, setThisWeek] = useState(0);
+  const [thisYear, setThisYear] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
   const [isFiltering, setIsFiltering] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
@@ -43,6 +47,10 @@ const FixedServices = () => {
       const { data } = await getFixedGigs(limit, skip, searchTerm);
       setGigs(data.gigs);
       setTotal(data.total);
+      setThisMonth(data.thisMonth);
+      setThisWeek(data.thisWeek);
+      setThisYear(data.thisYear);
+      setToday(data.today);
     } catch (error) {
       setGigs([]);
       console.log(error);
@@ -136,7 +144,13 @@ const FixedServices = () => {
   return (
     <>
       <div className="flex justify-between items-start mb-4 gap-4 flex-col md:flex-row">
-        <div>Total : {total}</div>
+        <div className="flex gap-8 items-center">
+          <span>Total : {total}</span>
+          <span>Today : {today}</span>
+          <span>Week : {thisWeek}</span>
+          <span>Month : {thisMonth}</span>
+          <span>Year : {thisYear}</span>
+        </div>
         <div className="form-control">
           <div className="input-group">
             <input

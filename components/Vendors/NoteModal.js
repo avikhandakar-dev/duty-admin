@@ -3,7 +3,7 @@ import { useRouter } from "next/router";
 import { Fragment, useEffect, useRef } from "react";
 import { IoMdCloseCircle } from "react-icons/io";
 import { useState } from "react";
-import { createNote, getNotesForVendor } from "@lib/api";
+import { createNote, deleteNote, getNotesForVendor } from "@lib/api";
 import { toast } from "react-hot-toast";
 import LoadingScreen from "@components/LoadingScreen";
 import moment from "moment";
@@ -51,6 +51,27 @@ const NoteModal = ({ isOpen, closeModal }) => {
     } catch (error) {
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  const handelDelete = async (noteId) => {
+    const userAction = confirm(`Are you sure you want to delete this note?`);
+    if (userAction) {
+      const Request = async () => {
+        try {
+          await deleteNote(noteId);
+          await getAllNotes();
+          return "Successfully done!";
+        } catch (error) {
+          console.log(error);
+          throw new Error(error.response?.data?.msg);
+        }
+      };
+      toast.promise(Request(), {
+        loading: <b>Please wait...</b>,
+        success: (data) => <b>{data}</b>,
+        error: (err) => <b>{err.toString()}</b>,
+      });
     }
   };
 
@@ -104,7 +125,13 @@ const NoteModal = ({ isOpen, closeModal }) => {
                         ) : (
                           <div className="space-y-2 max-h-96 overflow-y-auto">
                             {notes.map((note) => (
-                              <div className="border p-4 rounded border-gray-700">
+                              <div className="border p-4 rounded border-gray-700 relative">
+                                <button
+                                  onClick={() => handelDelete(note.id)}
+                                  className="absolute text-xl right-2 top-2 text-red-500"
+                                >
+                                  <IoMdCloseCircle />
+                                </button>
                                 <p>{note.text}</p>
                                 <p className="text-sm opacity-50">
                                   <span className="font-bold">
