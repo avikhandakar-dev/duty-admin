@@ -2,35 +2,43 @@ import FixedServices from "@components/Services/FixedServices";
 import PackageServices from "@components/Services/PackageServices";
 import StartingServices from "@components/Services/StartingServices";
 import { Tab } from "@headlessui/react";
+import { useState } from "react";
 
 const ServicesPage = () => {
+  const [doRefreash, setDoReFresh] = useState(false);
   function cn(...classes) {
     return classes.filter(Boolean).join(" ");
   }
   const Tabs = [
     {
       name: "Starting",
-      content: <StartingServices />,
+      content: <StartingServices refreash={doRefreash} />,
     },
     {
       name: "Fixed",
-      content: <FixedServices />,
+      content: <FixedServices refreash={doRefreash} />,
     },
     {
       name: "Package",
-      content: <PackageServices />,
+      content: <PackageServices refreash={doRefreash} />,
     },
   ];
   return (
     <>
-      <Tab.Group>
-        <Tab.List className="flex w-max mx-auto">
+      <Tab.Group as="div" className="relative">
+        <button
+          onClick={() => setDoReFresh(!doRefreash)}
+          className=" absolute right-0 top-2 btn btn-link capitalize"
+        >
+          Refreash
+        </button>
+        <Tab.List className="flex w-max">
           {Tabs.map((item, index) => (
             <Tab
               key={index}
               className={({ selected }) =>
                 cn(
-                  "w-full relative border-b dark:text-white px-2 py-2.5 focus:outline-none whitespace-nowrap",
+                  "w-full relative border-b dark:text-white px-4 py-2.5 focus:outline-none whitespace-nowrap",
                   selected
                     ? "text-primary dark:text-primary border-primary"
                     : "hover:text-primary"

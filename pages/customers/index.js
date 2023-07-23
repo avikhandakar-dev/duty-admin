@@ -1,5 +1,5 @@
 import LoadingScreen from "@components/LoadingScreen";
-import { getAllCustomers, getAllVendors } from "@lib/api";
+import { getAllCustomers } from "@lib/api";
 import { SocketContext } from "@lib/socketContext";
 import debounce from "lodash.debounce";
 import { useRouter } from "next/router";
@@ -12,6 +12,8 @@ import OrdersCustomer from "@components/Customers/OrdersCustomer";
 import Supports from "@components/Customers/Supports";
 import ChatUser from "@components/Customers/Chat";
 import NoteModalUser from "@components/Customers/NoteModalUser";
+import { FaFacebookMessenger } from "react-icons/fa";
+import MessageModal from "@components/Vendors/MessageModal";
 
 const Filters = [
   {
@@ -50,6 +52,8 @@ const CustomersPage = () => {
   const { id } = router.query;
   const [selectedFilter, setSelectedFilter] = useState("");
   const [isOpen, setIsOpen] = useState(false);
+  const [showMessage, setShowMessage] = useState(false);
+  const [isEnd, setIsEnd] = useState(false);
 
   function cn(...classes) {
     return classes.filter(Boolean).join(" ");
@@ -89,7 +93,7 @@ const CustomersPage = () => {
     return debounce(handleChange, 1000);
   }, []);
 
-  const fetchData = async () => {
+  const fetchData = async (merge = false) => {
     try {
       setIsFiltering(true);
       const { data } = await getAllCustomers(
@@ -98,8 +102,15 @@ const CustomersPage = () => {
         searchTerm,
         selectedFilter
       );
-      setUsers(data.users);
+      if (merge) {
+        setUsers((prev) => [...prev, ...data.users]);
+      } else {
+        setUsers(data.users);
+      }
       setTotal(data.total);
+      if (data.users.length < limit) {
+        setIsEnd(true);
+      }
     } catch (error) {
       setUsers([]);
       console.log(error);
@@ -115,8 +126,12 @@ const CustomersPage = () => {
   };
 
   useEffect(() => {
-    fetchData();
-  }, [skip, searchTerm, selectedFilter]);
+    fetchData(true);
+  }, [skip]);
+
+  useEffect(() => {
+    fetchData(false);
+  }, [searchTerm, selectedFilter]);
 
   useEffect(() => {
     if (users.length > 0) {
@@ -136,6 +151,10 @@ const CustomersPage = () => {
       });
     }
   }, [selectedVendor]);
+
+  useEffect(() => {
+    console.log(onlineUsers);
+  }, [onlineUsers]);
 
   return (
     <>
@@ -205,13 +224,25 @@ const CustomersPage = () => {
                     >
                       <div className="flex flex-1 items-center space-x-3 max-w-xs overflow-x-hidden">
                         {user.profilePhoto ? (
-                          <div className="avatar">
+                          <div
+                            className={`avatar ${
+                              onlineUsers.find((d) => d.id === user.id)
+                                ? "online"
+                                : "offline"
+                            }`}
+                          >
                             <div className="mask mask-squircle w-12 h-12">
                               <img src={user.profilePhoto} alt="Avatar" />
                             </div>
                           </div>
                         ) : (
-                          <div className="avatar placeholder">
+                          <div
+                            className={`avatar placeholder ${
+                              onlineUsers.find((d) => d.id === user.id)
+                                ? "online"
+                                : "offline"
+                            }`}
+                          >
                             <div className="mask mask-squircle w-12 h-12 bg-neutral-focus text-neutral-content">
                               <span className="text-xl uppercase">{`${user.name.slice(
                                 0,
@@ -226,9 +257,6 @@ const CustomersPage = () => {
                           <div className="text-sm opacity-50">{user.phone}</div>
                         </div>
                       </div>
-                      <div className="flex-shrink-0">
-                        {user.verified && <MdVerified />}
-                      </div>
                     </div>
                   ))}
                 </div>
@@ -237,27 +265,18 @@ const CustomersPage = () => {
               )}
             </div>
           )}
-          <div className="pb-4 flex justify-center items-center mt-4">
-            <ReactPaginate
-              breakLabel="..."
-              breakClassName="btn btn-sm btn-disabled px-4 relative"
-              breakLinkClassName="w-full h-full absolute inset-0 flex justify-center items-center"
-              nextLabel={<BsChevronDoubleRight />}
-              onPageChange={handlePageClick}
-              pageRangeDisplayed={3}
-              pageCount={Math.ceil(total / limit)}
-              previousLabel={<BsChevronDoubleLeft />}
-              renderOnZeroPageCount={null}
-              pageClassName="btn btn-sm relative px-4"
-              pageLinkClassName="w-full h-full absolute inset-0 flex justify-center items-center"
-              previousClassName="btn btn-sm relative px-4"
-              previousLinkClassName="w-full h-full absolute inset-0 flex justify-center items-center"
-              nextClassName="btn btn-sm relative px-4"
-              nextLinkClassName="w-full h-full absolute inset-0 flex justify-center items-center"
-              containerClassName="btn-group flex-wrap gap-y-2 justify-center"
-              activeClassName="btn btn-sm relative px-4 btn-active"
-            />
-          </div>
+          {!isEnd && (
+            <div className="pb-4 flex justify-center items-center mt-4">
+              <button
+                onClick={() => setSkip(skip + limit)}
+                className={`btn btn-success btn-sm btn-block btn-outline ${
+                  isFiltering && "loading"
+                }`}
+              >
+                Load More
+              </button>
+            </div>
+          )}
         </div>
         <div className="flex-1 h-auto bg-gray-800 rounded-md">
           <div>
@@ -268,6 +287,12 @@ const CustomersPage = () => {
                 className="btn btn-sm capitalize btn-primary rounded"
               >
                 Note
+              </button>
+              <button
+                onClick={() => setShowMessage(true)}
+                className="btn btn-sm capitalize btn-secondary rounded"
+              >
+                <FaFacebookMessenger />
               </button>
             </div>
             <Tab.Group>
@@ -306,6 +331,15 @@ const CustomersPage = () => {
           closeModal={() => {
             setIsOpen(false);
           }}
+        />
+      )}
+      {showMessage && (
+        <MessageModal
+          isOpen={showMessage}
+          closeModal={() => {
+            setShowMessage(false);
+          }}
+          isVendor={false}
         />
       )}
     </>

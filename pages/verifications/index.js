@@ -13,9 +13,25 @@ const VerificationsPage = () => {
   const [limit, setLimit] = useState(20);
   const [skip, setSkip] = useState(0);
   const [total, setTotal] = useState(0);
+  const [verified, setVerified] = useState(0);
+  const [notVerified, setNotVerified] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
   const [isFiltering, setIsFiltering] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
+  const [selectedFilter, setSelectedFilter] = useState("verified");
+
+  const Filters = [
+    {
+      name: "Verified",
+      value: "verified",
+      display: verified,
+    },
+    {
+      name: "Not Verified",
+      value: "not-verified",
+      display: notVerified,
+    },
+  ];
 
   const handleChange = (e) => {
     setSearchTerm(e.target.value);
@@ -28,9 +44,16 @@ const VerificationsPage = () => {
   const fetchData = async () => {
     try {
       setIsFiltering(true);
-      const { data } = await getAllVerifications(limit, skip, searchTerm);
+      const { data } = await getAllVerifications(
+        limit,
+        skip,
+        searchTerm,
+        selectedFilter
+      );
       setVerifications(data.verifications);
       setTotal(data.total);
+      setVerified(data.verified);
+      setNotVerified(data.notVerified);
     } catch (error) {
       setVerifications([]);
       console.log(error);
@@ -47,12 +70,27 @@ const VerificationsPage = () => {
 
   useEffect(() => {
     fetchData();
-  }, [skip, searchTerm]);
+  }, [skip, searchTerm, selectedFilter]);
 
   return (
     <>
       <div className="flex justify-between items-start mb-4 gap-4 flex-col md:flex-row">
-        <div></div>
+        <div className="flex flex-wrap mb-2">
+          {Filters.map((filter, i) => (
+            <label className="label cursor-pointer gap-1">
+              <input
+                className="radio radio-sm radio-primary"
+                type="radio"
+                value={filter.value}
+                checked={selectedFilter === filter.value}
+                onChange={() => setSelectedFilter(filter.value)}
+              />
+              <span className="label-text">
+                {filter.name} ({filter.display})
+              </span>
+            </label>
+          ))}
+        </div>
         <div className="form-control">
           <div className="input-group">
             <input

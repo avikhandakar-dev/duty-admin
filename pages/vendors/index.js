@@ -17,6 +17,8 @@ import Verification from "@components/Vendors/Verification";
 import OrdersVendor from "@components/Vendors/Orders";
 import WithdrawPage from "@components/Vendors/Withdraw";
 import NoteModal from "@components/Vendors/NoteModal";
+import { FaFacebookMessenger } from "react-icons/fa";
+import MessageModal from "@components/Vendors/MessageModal";
 
 const Filters = [
   {
@@ -67,6 +69,8 @@ const VendorsPage = () => {
   const [selectedFilter, setSelectedFilter] = useState("");
   const [rating, setRating] = useState(0);
   const [isOpen, setIsOpen] = useState(false);
+  const [showMessage, setShowMessage] = useState(false);
+  const [isEnd, setIsEnd] = useState(false);
 
   function cn(...classes) {
     return classes.filter(Boolean).join(" ");
@@ -114,7 +118,7 @@ const VendorsPage = () => {
     return debounce(handleChange, 1000);
   }, []);
 
-  const fetchData = async () => {
+  const fetchData = async (merge = false) => {
     try {
       setIsFiltering(true);
       const { data } = await getAllVendors(
@@ -123,8 +127,15 @@ const VendorsPage = () => {
         searchTerm,
         selectedFilter
       );
-      setUsers(data.users);
+      if (merge) {
+        setUsers((prev) => [...prev, ...data.users]);
+      } else {
+        setUsers(data.users);
+      }
       setTotal(data.total);
+      if (data.users.length < limit) {
+        setIsEnd(true);
+      }
     } catch (error) {
       setUsers([]);
       console.log(error);
@@ -148,8 +159,13 @@ const VendorsPage = () => {
   };
 
   useEffect(() => {
-    fetchData();
-  }, [skip, searchTerm, selectedFilter]);
+    fetchData(true);
+  }, [skip]);
+
+  useEffect(() => {
+    setIsEnd(false);
+    fetchData(false);
+  }, [searchTerm, selectedFilter]);
 
   useEffect(() => {
     if (users.length > 0) {
@@ -257,13 +273,25 @@ const VendorsPage = () => {
                     >
                       <div className="flex flex-1 items-center space-x-3 max-w-xs overflow-x-hidden">
                         {user.profilePhoto ? (
-                          <div className="avatar">
+                          <div
+                            className={`avatar ${
+                              onlineUsers.includes(user.id)
+                                ? "online"
+                                : "offline"
+                            }`}
+                          >
                             <div className="mask mask-squircle w-12 h-12">
                               <img src={user.profilePhoto} alt="Avatar" />
                             </div>
                           </div>
                         ) : (
-                          <div className="avatar placeholder">
+                          <div
+                            className={`avatar placeholder ${
+                              onlineUsers.includes(user.id)
+                                ? "online"
+                                : "offline"
+                            }`}
+                          >
                             <div className="mask mask-squircle w-12 h-12 bg-neutral-focus text-neutral-content">
                               <span className="text-xl uppercase">{`${user.name.slice(
                                 0,
@@ -289,27 +317,18 @@ const VendorsPage = () => {
               )}
             </div>
           )}
-          <div className="pb-4 flex justify-center items-center mt-4">
-            <ReactPaginate
-              breakLabel="..."
-              breakClassName="btn btn-sm btn-disabled px-4 relative"
-              breakLinkClassName="w-full h-full absolute inset-0 flex justify-center items-center"
-              nextLabel={<BsChevronDoubleRight />}
-              onPageChange={handlePageClick}
-              pageRangeDisplayed={3}
-              pageCount={Math.ceil(total / limit)}
-              previousLabel={<BsChevronDoubleLeft />}
-              renderOnZeroPageCount={null}
-              pageClassName="btn btn-sm relative px-4"
-              pageLinkClassName="w-full h-full absolute inset-0 flex justify-center items-center"
-              previousClassName="btn btn-sm relative px-4"
-              previousLinkClassName="w-full h-full absolute inset-0 flex justify-center items-center"
-              nextClassName="btn btn-sm relative px-4"
-              nextLinkClassName="w-full h-full absolute inset-0 flex justify-center items-center"
-              containerClassName="btn-group flex-wrap gap-y-2 justify-center"
-              activeClassName="btn btn-sm relative px-4 btn-active"
-            />
-          </div>
+          {!isEnd && (
+            <div className="pb-4 flex justify-center items-center mt-4">
+              <button
+                onClick={() => setSkip(skip + limit)}
+                className={`btn btn-success btn-sm btn-block btn-outline ${
+                  isFiltering && "loading"
+                }`}
+              >
+                Load More
+              </button>
+            </div>
+          )}
         </div>
         <div className="flex-1 h-auto bg-gray-800 rounded-md">
           <div>
@@ -329,13 +348,19 @@ const VendorsPage = () => {
                 ))}
               </select>
               <span>{dashboardData?.accepted ? "Approved" : "Pending"}</span>
-              <span>Total Views : {dashboardData?.views || 0}</span>
+              <span>Views : {dashboardData?.views || 0}</span>
               <span>Rating : {rating}</span>
               <button
                 onClick={() => setIsOpen(true)}
                 className="btn btn-sm capitalize btn-primary rounded"
               >
                 Note
+              </button>
+              <button
+                onClick={() => setShowMessage(true)}
+                className="btn btn-sm capitalize btn-secondary rounded"
+              >
+                <FaFacebookMessenger />
               </button>
               <ServiceOptionsMenu dashboard={dashboardData} />
             </div>
@@ -375,6 +400,15 @@ const VendorsPage = () => {
           closeModal={() => {
             setIsOpen(false);
           }}
+        />
+      )}
+      {showMessage && (
+        <MessageModal
+          isOpen={showMessage}
+          closeModal={() => {
+            setShowMessage(false);
+          }}
+          isVendor={true}
         />
       )}
     </>

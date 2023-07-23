@@ -22,6 +22,7 @@ const PendingWithdrawTable = () => {
   const [limit, setLimit] = useState(20);
   const [skip, setSkip] = useState(0);
   const [total, setTotal] = useState(0);
+  const [totalAmount, setTotalAmount] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
   const [isFiltering, setIsFiltering] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
@@ -45,6 +46,7 @@ const PendingWithdrawTable = () => {
       );
       setPendingWithdraws(data.withdraws);
       setTotal(data.total);
+      setTotalAmount(data.totalAmount);
     } catch (error) {
       setPendingWithdraws([]);
       console.log(error);
@@ -117,7 +119,7 @@ const PendingWithdrawTable = () => {
   return (
     <>
       <div className="flex justify-between items-end mb-4 gap-4 flex-col md:flex-row">
-        <div></div>
+        <div>Total Amount : {totalAmount}</div>
         <div className="form-control">
           <div className="input-group">
             <input

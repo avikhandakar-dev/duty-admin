@@ -51,20 +51,12 @@ const OrderType = [
     value: "ONETIME",
   },
   {
-    name: "Installment",
-    value: "INSTALLMENT",
-  },
-  {
     name: "Package",
     value: "PACKAGE",
   },
   {
     name: "Starting",
     value: "STARTING",
-  },
-  {
-    name: "Subscription",
-    value: "SUBS",
   },
 ];
 
@@ -73,6 +65,10 @@ export default function Home() {
   const [limit, setLimit] = useState(20);
   const [skip, setSkip] = useState(0);
   const [total, setTotal] = useState(0);
+  const [today, setToday] = useState(0);
+  const [thisMonth, setThisMonth] = useState(0);
+  const [thisWeek, setThisWeek] = useState(0);
+  const [thisYear, setThisYear] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
   const [isFiltering, setIsFiltering] = useState(false);
   const [selectedFilter, setSelectedFilter] = useState(1);
@@ -85,7 +81,7 @@ export default function Home() {
   const filterButtons = [
     {
       id: 1,
-      title: "All",
+      title: `All(${total})`,
       action: () => {
         setSelectedFilter(1);
         setGte("");
@@ -96,7 +92,7 @@ export default function Home() {
     },
     {
       id: 2,
-      title: "Today",
+      title: `Today(${today})`,
       action: () => {
         setSelectedFilter(2);
         setGte(moment().subtract(1, "days"));
@@ -104,7 +100,7 @@ export default function Home() {
     },
     {
       id: 3,
-      title: "Last 7 Days",
+      title: `This week(${thisWeek})`,
       action: () => {
         setSelectedFilter(3);
         setGte(moment().subtract(7, "days"));
@@ -112,10 +108,18 @@ export default function Home() {
     },
     {
       id: 4,
-      title: "This Month",
+      title: `This Month(${thisMonth})`,
       action: () => {
         setSelectedFilter(4);
         setGte(moment().subtract(30, "days"));
+      },
+    },
+    {
+      id: 5,
+      title: `This Year(${thisYear})`,
+      action: () => {
+        setSelectedFilter(5);
+        setGte(moment().subtract(365, "days"));
       },
     },
   ];
@@ -144,6 +148,10 @@ export default function Home() {
       );
       setOrders(data.orders);
       setTotal(data.total);
+      setThisMonth(data.thisMonth);
+      setThisWeek(data.thisWeek);
+      setThisYear(data.thisYear);
+      setToday(data.today);
     } catch (error) {
       setOrders([]);
       console.log(error);

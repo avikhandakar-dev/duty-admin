@@ -19,7 +19,7 @@ import {
 } from "react-icons/bs";
 import ReactPaginate from "react-paginate";
 
-const FixedServices = () => {
+const FixedServices = ({ refreash }) => {
   const [gigs, setGigs] = useState([]);
   const [limit, setLimit] = useState(20);
   const [skip, setSkip] = useState(0);
@@ -32,6 +32,35 @@ const FixedServices = () => {
   const [isFiltering, setIsFiltering] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [doRefresh, setDoRefresh] = useState(false);
+  const [selectedFilter, setSelectedFilter] = useState("");
+
+  const Filters = [
+    {
+      name: "All",
+      value: "",
+      display: total,
+    },
+    {
+      name: "Today",
+      value: "Today",
+      display: today,
+    },
+    {
+      name: "Week",
+      value: "ThisWeek",
+      display: thisWeek,
+    },
+    {
+      name: "Month",
+      value: "ThisMonth",
+      display: thisMonth,
+    },
+    {
+      name: "Year",
+      value: "ThisYear",
+      display: thisYear,
+    },
+  ];
 
   const handleChange = (e) => {
     setSearchTerm(e.target.value);
@@ -44,7 +73,12 @@ const FixedServices = () => {
   const fetchData = async () => {
     try {
       setIsFiltering(true);
-      const { data } = await getFixedGigs(limit, skip, searchTerm);
+      const { data } = await getFixedGigs(
+        limit,
+        skip,
+        searchTerm,
+        selectedFilter
+      );
       setGigs(data.gigs);
       setTotal(data.total);
       setThisMonth(data.thisMonth);
@@ -139,17 +173,26 @@ const FixedServices = () => {
 
   useEffect(() => {
     fetchData();
-  }, [skip, searchTerm, doRefresh]);
+  }, [skip, searchTerm, doRefresh, selectedFilter, refreash]);
 
   return (
     <>
       <div className="flex justify-between items-start mb-4 gap-4 flex-col md:flex-row">
-        <div className="flex gap-8 items-center">
-          <span>Total : {total}</span>
-          <span>Today : {today}</span>
-          <span>Week : {thisWeek}</span>
-          <span>Month : {thisMonth}</span>
-          <span>Year : {thisYear}</span>
+        <div className="flex flex-wrap mb-2">
+          {Filters.map((filter, i) => (
+            <label className="label cursor-pointer gap-1">
+              <input
+                className="radio radio-sm radio-primary"
+                type="radio"
+                value={filter.value}
+                checked={selectedFilter === filter.value}
+                onChange={() => setSelectedFilter(filter.value)}
+              />
+              <span className="label-text">
+                {filter.name} ({filter.display})
+              </span>
+            </label>
+          ))}
         </div>
         <div className="form-control">
           <div className="input-group">
